@@ -31,9 +31,9 @@ internal data class ModelInput(
     var type: Int
 )
 
-internal class SegmentAnything {
+const val TAG = "SegmentAnyThing"
 
-    private val tag = "SegmentAnyThing"
+internal class SegmentAnything {
 
     fun execute(
         embedding: Npy,
@@ -54,11 +54,11 @@ internal class SegmentAnything {
             embeddingShape,
         )
         Log.d(
-            tag,
+            TAG,
             "embedding shape:[${embedding.shape.joinToString()}], data size:${embeddingData.size}"
         )
 
-        Log.d(tag, "model scale:${modelScale}")
+        Log.d(TAG, "model scale:${modelScale}")
 
         // clicks
         val n = clicks.size
@@ -119,7 +119,7 @@ internal class SegmentAnything {
         val result: ModelResult
         // Step 4: output analysis
         output.use {
-            Log.d(tag, "model output name:${ortSession.outputNames}")
+            Log.d(TAG, "model output name:${ortSession.outputNames}")
             val tensor = output.get(ortSession.outputNames.first()).get()
             val maskData = (tensor as OnnxTensor).floatBuffer.array()
 
@@ -127,7 +127,7 @@ internal class SegmentAnything {
             val width = shape[3].toInt()
             val height = shape[2].toInt()
 
-            Log.d(tag, "mask data size:${maskData.size}, width:$width, height:$height")
+            Log.d(TAG, "mask data size:${maskData.size}, width:$width, height:$height")
 
             val rgbaImageData = arrayToImageData(maskData, width, height)
             val outputMaskBitmap = bitmapFromRgba(width, height, rgbaImageData)
